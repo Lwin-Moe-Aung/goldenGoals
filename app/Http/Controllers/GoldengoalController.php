@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\GoldengoalRequest;
 use App\Goldengoal;
 use Illuminate\Http\Request;
 
@@ -27,13 +28,18 @@ class GoldengoalController extends Controller
         //
     }
 
+    public function getData()
+    {
+        return Goldengoal::orderBy('name','DESC')->get();
+    }
+
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(GoldengoalRequest $request)
     {
         $gg = new Goldengoal;
         $gg->name = $request->name;
