@@ -67,7 +67,7 @@ class GoldengoalController extends Controller
      */
     public function edit(Goldengoal $goldengoal)
     {
-        //
+       
     }
 
     /**
@@ -77,9 +77,13 @@ class GoldengoalController extends Controller
      * @param  \App\Goldengoal  $goldengoal
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Goldengoal $goldengoal)
+    public function update(GoldengoalRequest $request)
     {
-        //
+        $gg = Goldengoal::find($request->id);
+        $gg->name = $request->name;
+        $gg->phone = $request->phone;
+        $gg->email = $request->email;
+        $gg->save();
     }
 
     /**
