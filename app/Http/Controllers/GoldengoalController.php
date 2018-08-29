@@ -46,6 +46,7 @@ class GoldengoalController extends Controller
         $gg->phone = $request->phone;
         $gg->email = $request->email;
         $gg->save();
+        return $gg;
     }
 
     /**
@@ -92,8 +93,9 @@ class GoldengoalController extends Controller
      * @param  \App\Goldengoal  $goldengoal
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Goldengoal $goldengoal)
+    public function destroy( $id)
     {
-        //
+        
+        Goldengoal::where('id',$id)->delete();
     }
 }

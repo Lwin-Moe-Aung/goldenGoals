@@ -46366,6 +46366,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 var Add = __webpack_require__(11);
 var Show = __webpack_require__(49);
@@ -46378,7 +46382,8 @@ var Update = __webpack_require__(52);
 			showActive: '',
 			updateActive: '',
 			lists: '',
-			errors: ''
+			errors: '',
+			loading: false
 		};
 	},
 	mounted: function mounted() {
@@ -46394,6 +46399,7 @@ var Update = __webpack_require__(52);
 	methods: {
 		openAdd: function openAdd() {
 			this.addActive = 'is-active';
+			this.lists;
 		},
 		openShow: function openShow(key) {
 			this.$children[1].list = this.lists[key];
@@ -46407,6 +46413,19 @@ var Update = __webpack_require__(52);
 			this.addActive = '';
 			this.showActive = '';
 			this.updateActive = '';
+		},
+		del: function del(key, id) {
+			var _this2 = this;
+
+			if (confirm("Are u sure?")) {
+				this.loading = !this.loading;
+				console.log(key + ' ' + id);
+				axios.delete('/phonebook/' + id).then(function (response) {
+					return _this2.lists.splice(key, 1);
+				}, this.loading = !this.loading).catch(function (error) {
+					return _this2.errors = error.response.data.errors;
+				});
+			}
 		}
 	}
 });
@@ -46481,7 +46500,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       var _this = this;
 
       axios.post('/phonebook', this.$data.list).then(function (response) {
-        return _this.close();
+        _this.close();
+        _this.$parent.lists.push(response.data);
       }).catch(function (error) {
         return _this.errors = error.response.data.errors;
       });
@@ -47133,7 +47153,13 @@ var render = function() {
                 on: { click: _vm.openAdd }
               },
               [_vm._v("\n\t\t      Add New\n\t\t    ")]
-            )
+            ),
+            _vm._v(" "),
+            _vm.loading
+              ? _c("span", { staticClass: "is-pulled-right" }, [
+                  _c("i", { staticClass: "fa fa-spinner fa-spin fa-2x fa-fw" })
+                ])
+              : _vm._e()
           ]),
           _vm._v(" "),
           _vm._m(0),
@@ -47144,7 +47170,17 @@ var render = function() {
                 _vm._v("\n\t\t  \t\t" + _vm._s(item.name) + "\n\t\t  \t")
               ]),
               _vm._v(" "),
-              _vm._m(1, true),
+              _c("span", { staticClass: "panel-icon column is-1" }, [
+                _c("i", {
+                  staticClass: "has-text-danger fa fa-trash",
+                  attrs: { "aria-hidden": "true" },
+                  on: {
+                    click: function($event) {
+                      _vm.del(key, item.id)
+                    }
+                  }
+                })
+              ]),
               _vm._v(" "),
               _c("span", { staticClass: "panel-icon column is-1" }, [
                 _c("i", {
@@ -47212,17 +47248,6 @@ var staticRenderFns = [
           })
         ])
       ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "panel-icon column is-1" }, [
-      _c("i", {
-        staticClass: "has-text-danger fa fa-trash",
-        attrs: { "aria-hidden": "true" }
-      })
     ])
   }
 ]
@@ -47302,9 +47327,9 @@ var staticRenderFns = [
         _c("h1", { staticClass: "title" }, [_vm._v("Section")]),
         _vm._v(" "),
         _c("h2", { staticClass: "subtitle" }, [
-          _vm._v("\n      A simple container to divide your page into "),
+          _vm._v("\n        \tA simple container to divide your page into "),
           _c("strong", [_vm._v("sections")]),
-          _vm._v(", like the one you're currently reading\n    ")
+          _vm._v(", like the one you're currently reading\n      \t")
         ])
       ])
     ])
